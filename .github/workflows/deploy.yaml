@@ -1,7 +1,4 @@
-# we want to specify when it should run
----
 name: Lafialink DevOps Pipeline
-
 on:
   push:
     branches:
