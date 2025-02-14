@@ -1,6 +1,6 @@
 # we want to specify when it should run
 ---
-name: Complete DevOps Pipeline
+name: lafialink DevOps Pipeline
 
 on:
   push:
@@ -18,13 +18,13 @@ jobs:
           echo "SHORT_SHA=$(echo ${GITHUB_SHA} | cut -c1-7)" >> $GITHUB_ENV
       - name: Build Docker Image
         run: |
-          docker build -t profgreatwonder/complete-devops-pipeline:${{ env.SHORT_SHA }} .
+          docker build -t profgreatwonder/lafialink-devops-pipeline:${{ env.SHORT_SHA }} .
       - name: Login to Docker Hub
         run: |
           echo "${{ secrets.DOCKERHUB_TOKEN }}" | docker login -u "${{ secrets.DOCKERHUB_USERNAME }}" --password-stdin
       - name: Push to Docker Hub
         run: |
-          docker push profgreatwonder/complete-devops-pipeline:${{ env.SHORT_SHA }}
+          docker push profgreatwonder/lafialink-devops-pipeline:${{ env.SHORT_SHA }}
       # - name: Configure Git Author
       #   run: |
       #     git config --local user.email "muoghaluchidinma@gmail.com"
