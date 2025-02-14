@@ -1,4 +1,7 @@
-name: Lafialink DevOps Pipeline
+# we want to specify when it should run
+---
+name: Complete DevOps Pipeline
+
 on:
   push:
     branches:
@@ -15,30 +18,28 @@ jobs:
           echo "SHORT_SHA=$(echo ${GITHUB_SHA} | cut -c1-7)" >> $GITHUB_ENV
       - name: Build Docker Image
         run: |
-          docker build -t profgreatwonder/lafialink-devops-pipeline:${{ env.SHORT_SHA }} .
+          docker build -t profgreatwonder/complete-devops-pipeline:${{ env.SHORT_SHA }} .
       - name: Login to Docker Hub
         run: |
           echo "${{ secrets.DOCKERHUB_TOKEN }}" | docker login -u "${{ secrets.DOCKERHUB_USERNAME }}" --password-stdin
       - name: Push to Docker Hub
         run: |
-          docker push profgreatwonder/lafialink-devops-pipeline:${{ env.SHORT_SHA }}
+          docker push profgreatwonder/complete-devops-pipeline:${{ env.SHORT_SHA }}
+      # - name: Configure Git Author
+      #   run: |
+      #     git config --local user.email "muoghaluchidinma@gmail.com"
+      #     git config --local user.name "profgreatwonder"
+      # - name: Update Helm Chart with new Image Tag
+      #   run: |
+      #     sed -i "s/tag:.*/tag: ${{ env.SHORT_SHA }}/" ./complete-devops-project-time-printer/values.yaml
+      #     git add ./complete-devops-project-time-printer/values.yaml
+      #     git commit -m "updated image tag to ${{ env.SHORT_SHA }}"
+      #     git push
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.PUSH_GITHUB_LOGIN }}
+      # - name: Login to Remote Git Repo
+      #   run: |
+      #     git remote set-url https://${{ secrets.PUSH_GITHUB_LOGIN }}@github.com/profgreatwonder/full_devops_pipeline.git
+      #     git push origin main
 
-#       - name: Configure Git Author
-#         run: |
-#           git config --local user.email "muoghaluchidinma@gmail.com"
-#           git config --local user.name "profgreatwonder"
-#       - name: Update Helm Chart with new Image Tag
-#         run: |
-#           sed -i "s/tag:.*/tag: ${{ env.SHORT_SHA }}/" ./complete-devops-project-time-printer/values.yaml
-#           git add ./complete-devops-project-time-printer/values.yaml
-#           git commit -m "updated image tag to ${{ env.SHORT_SHA }}"
-#           git push
-#         env:
-#           GITHUB_TOKEN: ${{ secrets.PUSH_GITHUB_LOGIN }}
-#       - name: Login to Remote Git Repo
-#         run: |
-#           git remote set-url https://${{ secrets.PUSH_GITHUB_LOGIN }}@github.com/profgreatwonder/full_devops_pipeline.git
-#           git push origin main
-
-# # the sed command finds where our image tag is defined and replaces it with the github short commit hash. All the git commands will run after. The git push command will push the changes back to github, triggering argocd to sync the kubernetes cluster with the new helm version/image tag. This ensures that kubernetes always has the latest version of our app. We need a git author
-#
+# the sed command finds where our image tag is defined and replaces it with the github short commit hash. All the git commands will run after. The git push command will push the changes back to github, triggering argocd to sync the kubernetes cluster with the new helm version/image tag. This ensures that kubernetes always has the latest version of our app. We need a git author
